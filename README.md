@@ -1,0 +1,2 @@
+# saper-jimp
+projekt zaliczeniowy
