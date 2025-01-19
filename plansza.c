@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 #include "plansza.h"
 
 //x - ilosc kolumn
@@ -40,8 +41,8 @@ void zamiana_kolo_pktu(plansza *p, int w, int k, char znak) //(w, k) = (y, x)
         {
             if(p->board[cw][ck] != 'o' && p->board[cw][ck] != 'w' && p->board[cw][ck] != 'W')
             {
-               if(p->board[cw][ck] == znak){
-                p->board[cw][ck] = znak + 1;
+               if(isdigit(p->board[cw][ck])){
+                p->board[cw][ck] += 1;
                 }
                 else
                 p->board[cw][ck] = znak;
