@@ -102,7 +102,7 @@ void start_plansza(plansza *p, int podane_start_x, int podane_start_y, int ile_m
 void wyswietl_plansze(plansza *p)
 {
     //wiersz z numerami linii
-    for(int i = 0; i <= (p->w); i++)
+    for(int i = 0; i <= (p->k); i++)
     {
         if(i == 0){
             printf("   ");
@@ -112,7 +112,7 @@ void wyswietl_plansze(plansza *p)
     }
     printf("\n");
     //wiersz z obramowaniem planszy
-    for(int i = 0; i <= (p->w); i++)
+    for(int i = 0; i <= (p->k); i++)
     {
         if(i == 0){
             printf("   ");
