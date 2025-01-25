@@ -5,6 +5,7 @@ typedef struct _plansza{
     int w; //wiersze
     int k;  //kolumny
     char **board;
+    int **stan; //zakryte (0), odkryte (1)
 }plansza;
 
 void inicjalizuj_plansze(plansza *p, int wymiar_x, int wymiar_y);
