@@ -7,15 +7,18 @@
 
 //x - ilosc kolumn
 //y = ilosc wierszy
+//stan - zakryte(0), odkryte(1)
 
 void inicjalizuj_plansze(plansza *p, int wymiar_x, int wymiar_y)
 {
     p->k = wymiar_x;    //to sa kolumny
     p->w = wymiar_y;    //wiersze
     p->board = (char **)malloc((p->w) * sizeof(char*));
+    p->stan = malloc((p->w) * sizeof(int*));
     for(int i = 0; i < (p->w); i++)
     {
         p->board[i] = (char *)malloc((p->k) * sizeof(char));
+        p->stan[i] = malloc((p->k)* sizeof(int));
     }
 }
 
@@ -24,8 +27,10 @@ void zwolnij_plansze(plansza *p)
     for(int i = 0; i < (p->w); i++)
     {
         free(p->board[i]);
+        free(p->stan[i]);
     }
     free(p->board);
+    free(p->stan);
 }
 
 void zamiana_kolo_pktu(plansza *p, int w, int k, char znak) //(w, k) = (y, x)
@@ -50,6 +55,7 @@ void zamiana_kolo_pktu(plansza *p, int w, int k, char znak) //(w, k) = (y, x)
             else if(p->board[cw][ck] == 'w' && znak == '_')
             {
                     p->board[cw][ck] = znak;
+                    p->stan[cw][ck] = 1;
             }
         }
     }
@@ -67,6 +73,7 @@ void start_plansza(plansza *p, int podane_start_x, int podane_start_y, int ile_m
         for(int j = 0; j < (p->k); j++)
         {
             p->board[i][j] = '_';
+            p->stan[i][j] = 0; //zakryte
         }
     }
 
@@ -86,8 +93,9 @@ void start_plansza(plansza *p, int podane_start_x, int podane_start_y, int ile_m
         p->board[mina_w][mina_k] = 'o';
         zamiana_kolo_pktu(p, mina_w, mina_k, '1');
     }
-    //p->board[start_w][start_k] = '_';
-    //zamiana_kolo_pktu(p, start_w, start_k, '_');
+    p->stan[start_w][start_k] = 1; //odkryte
+    p->board[start_w][start_k] = '_';
+    zamiana_kolo_pktu(p, start_w, start_k, '_');
 }
 
 
@@ -120,16 +128,10 @@ void wyswietl_plansze(plansza *p)
         printf("%3d|", i+1);
         for(int j = 0; j < (p->k); j++)
         {
-            if(p->board[i][j] == 'W' || p->board[i][j] == 'w')
-            {
-                //p->board[i][j] = '_';
-                //zamiana_kolo_pktu(p, i, j, '_');
+            if(p->stan[i][j] == 1)
                 printf(" %c  ", p->board[i][j]);
-            }
             else
-                printf(" %c  ", p->board[i][j]);
-                //printf(" \u2588  ");
-
+                printf(" \u2588  ");
         }
         printf("\n\n");
     }
