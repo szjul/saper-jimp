@@ -51,6 +51,7 @@ void stan_kolo_pktu(plansza *p, int w, int k)
     }
     p->stan[w][k] = 1;
 
+
     int dw[8] = {0, 1, 1, 1, 0, -1, -1, -1};
     int dk[8] = {-1, -1, 0, 1, 1, 1, 0, -1};
 
