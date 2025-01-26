@@ -33,6 +33,36 @@ void zwolnij_plansze(plansza *p)
     free(p->stan);
 }
 
+void stan_kolo_pktu(plansza *p, int w, int k)
+{
+    if (w < 0 || w >= p->w || k < 0 || k >= p->k)
+        return;
+
+    if (p->board[w][k] != '_' && !isdigit(p->board[w][k]))
+        return;
+
+    if (p->stan[w][k] == 1)
+        return;
+
+    if (isdigit(p->board[w][k]))
+    {
+        p->stan[w][k] = 1;
+        return;
+    }
+    p->stan[w][k] = 1;
+
+
+    int dw[4] = {0, 1, 0, -1};
+    int dk[4] = {1, 0, -1, 0};
+
+    for (int i = 0; i < 4; i++)
+    {
+        int cw = w + dw[i];
+        int ck = k + dk[i];
+        stan_kolo_pktu(p, cw, ck);
+    }
+}
+
 void zamiana_kolo_pktu(plansza *p, int w, int k, char znak) //(w, k) = (y, x)
 {
     int dw[8] = {0, 1, 1, 1, 0, -1, -1, -1};
@@ -44,18 +74,24 @@ void zamiana_kolo_pktu(plansza *p, int w, int k, char znak) //(w, k) = (y, x)
         int ck = k + dk[i]; //cale kolumny
         if(cw >= 0 && cw < (p->w) && ck >= 0 && ck < (p->k) )
         {
-            if(p->board[cw][ck] != 'o' && p->board[cw][ck] != 'w' && p->board[cw][ck] != 'W')
+            if(p->board[cw][ck] == 'w')
+            {
+                if(isdigit(p->board[cw][ck]));
+                else
+                {
+                    p->board[cw][ck] = znak;
+                }
+            }
+
+            else if(znak == '_' && isdigit(p->board[cw][ck]));
+
+            else if(p->board[cw][ck] != 'o')
             {
                if(isdigit(p->board[cw][ck])){
                 p->board[cw][ck] += 1;
                 }
                 else
                 p->board[cw][ck] = znak;
-            }
-            else if(p->board[cw][ck] == 'w' && znak == '_')
-            {
-                    p->board[cw][ck] = znak;
-                    p->stan[cw][ck] = 1;
             }
         }
     }
@@ -88,21 +124,25 @@ void start_plansza(plansza *p, int podane_start_x, int podane_start_y, int ile_m
         {
             mina_k = rand()%(p->k);
             mina_w = rand()%(p->w);
-        }while(p->board[mina_w][mina_k] == 'o' || p->board[mina_w][mina_k] == 'w' || p->board[mina_w][mina_k] == 'W');
+        }while(p->board[mina_w][mina_k] == 'o' || p->board[mina_w][mina_k] == 'w'
+               || p->board[mina_w][mina_k] == 'W'|| isdigit(p->board[mina_w][mina_k]));
 
         p->board[mina_w][mina_k] = 'o';
         zamiana_kolo_pktu(p, mina_w, mina_k, '1');
     }
-    p->stan[start_w][start_k] = 1; //odkryte
     p->board[start_w][start_k] = '_';
     zamiana_kolo_pktu(p, start_w, start_k, '_');
+
+    stan_kolo_pktu(p, start_w, start_k);
+
+
 }
 
 
 void wyswietl_plansze(plansza *p)
 {
     //wiersz z numerami linii
-    for(int i = 0; i <= (p->k); i++)
+    for(int i = 0; i <= (p->w); i++)
     {
         if(i == 0){
             printf("   ");
@@ -112,7 +152,7 @@ void wyswietl_plansze(plansza *p)
     }
     printf("\n");
     //wiersz z obramowaniem planszy
-    for(int i = 0; i <= (p->k); i++)
+    for(int i = 0; i <= (p->w); i++)
     {
         if(i == 0){
             printf("   ");
