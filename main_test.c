@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "plansza.h"
+#include "obsluga.h"
 
 typedef enum
 {
@@ -19,6 +20,7 @@ int main(int argc, char *argv[])
     	int opcja;
 	char *sciezka_pliku = NULL;
 	FILE* fp;
+	int x, y;
 
 	char bufor[10];
 	Level poziom = UNKNOWN_LEVEL;
@@ -62,18 +64,19 @@ int main(int argc, char *argv[])
 				poziom = EASY_LEVEL;
 				printf("Wybrano poziom latwy\n");
 			    	inicjalizuj_plansze(&p, 9, 9);
-			    	printf("Zainicjalizowano plansze\n");
-			    	start_plansza(&p, 4, 4, 10);
-			    	printf("Plansza wystartowala");
+				liczba_min = 9;
 			} else if(strcmp(bufor,"sredni") == 0)
 			{
 				poziom = MEDIUM_LEVEL;
+				printf("Wybrano poziom sredni \n");
 			    	inicjalizuj_plansze(&p, 16, 16);
-			    	start_plansza(&p,16,16,30);
+				liczba_min = 30;
 			} else if(strcmp(bufor, "trudny") == 0)
 			{
 				poziom = HARD_LEVEL;
+				printf("Wybrano poziom trudny \n");
 				inicjalizuj_plansze(&p, 16, 30);
+				liczba_min = 99;
  			} else if(strcmp(bufor, "custom") == 0) 
 			{
 				poziom = CUSTOM_LEVEL;
@@ -84,16 +87,21 @@ int main(int argc, char *argv[])
 				printf("\nPodaj liczbe wierszy planszy: ");
                 		scanf("%d",&liczba_min);
     				inicjalizuj_plansze(&p, liczba_wierszy, liczba_kolumn);
-				start_plansza(&p,liczba_wierszy,liczba_kolumn,liczba_min);
 			} else
 			{
 				printf("\nPodano zly poziom trudnosci. Prosze wpisac latwy, sredni, trudny lub custom\n");
 			}	
 		}
 	}
-	printf("Generuje plansze na podanym poziomie trudnosci\n");
+	printf("Podaj x i y na ktorych chcesz zaczac: ");
+        scanf("%d %d",&x, &y);
+	start_plansza(&p,x,y,liczba_min);
+	printf("Generuje plansze na podanym poziomie trudnosci\n");	
 	wyswietl_plansze(&p);
 	printf("Plansza poczatkowa. Podaj co chcesz zrobic dalej: \n");
+	
+	//funkcja do kolejnych ruchow
+
 	zwolnij_plansze(&p);
 
 }
