@@ -3,16 +3,20 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
+#include "saper.h"
 #include "plansza.h"
+#include "obsluga.h"
+
 
 //x - ilosc kolumn
 //y = ilosc wierszy
 //stan - zakryte(0), odkryte(1)
 
-void inicjalizuj_plansze(plansza *p, int wymiar_x, int wymiar_y)
+void inicjalizuj_plansze(plansza *p, int wymiar_x, int wymiar_y, int ile_min)
 {
-    p->k = wymiar_x;    //to sa kolumny
-    p->w = wymiar_y;    //wiersze
+    p->k = wymiar_x;      // to sa kolumny
+    p->w = wymiar_y;      // wiersze
+    p->ile_min = ile_min; // liczba min
     p->board = (char **)malloc((p->w) * sizeof(char*));
     p->stan = malloc((p->w) * sizeof(int*));
     for(int i = 0; i < (p->w); i++)
@@ -97,7 +101,7 @@ void zamiana_kolo_pktu(plansza *p, int w, int k, char znak) //(w, k) = (y, x)
     }
 }
 
-void start_plansza(plansza *p, int podane_start_x, int podane_start_y, int ile_min)
+void start_plansza(plansza *p, int podane_start_x, int podane_start_y)
 {
     srand(time(NULL));
     int start_w = podane_start_y - 1;
@@ -117,7 +121,7 @@ void start_plansza(plansza *p, int podane_start_x, int podane_start_y, int ile_m
     zamiana_kolo_pktu(p, start_w, start_k, 'w');
 
 //rozmieszczenie min i cyfr wokol nich na planszy
-    for(int n = 0; n < ile_min; n++)
+    for(int n = 0; n < p->ile_min; n++)
     {
         int mina_k, mina_w;
         do
@@ -138,15 +142,15 @@ void start_plansza(plansza *p, int podane_start_x, int podane_start_y, int ile_m
 
 }
 
-int ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli ruch to nie 'r' ani 'f', 2 jesli trafi na mine
+StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli ruch to nie 'r' ani 'f', 2 jesli trafi na mine
 {
     //printf("ruch\n");
     x--;
     y--;
     if(co != 'r' && co != 'f')
     {
-        printf("zly ruch\n");
-        return 1;
+        printf("Zly ruch\n");
+        return STEP_INVALID_CMD;
     }
     else if(co == 'r')
     {
@@ -156,8 +160,8 @@ int ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli ruch to
             stan_kolo_pktu(p, y, x);
         else if(p->board[y][x] =='o')
         {
-            printf("trafiles na mine, przegrywasz:(\n");
-            return 2;
+            printf("Trafiles na mine, przegrywasz:(\n");
+            return STEP_BOMB_HIT;
         }
     }
     else
@@ -168,7 +172,7 @@ int ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli ruch to
         else if(p->stan[y][x] == 2)
             p->board[y][x] = 1;
     }
-    return 0;
+    return STEP_OK;
 }
 
 void wyswietl_plansze(plansza *p)
@@ -210,3 +214,81 @@ void wyswietl_plansze(plansza *p)
         printf("\n\n");
     }
 }
+
+StepResult gra_z_pliku(plansza *p, const char *sciezka)
+{
+	int x, y, wymiar_x, wymiar_y, ile_min;
+	char znak;
+	char bufor[10];
+	StepResult krok = STEP_OK;
+	int poprawne_kroki = 0, wynik = 0;
+	FILE* plik;
+	Level poziom = UNKNOWN_LEVEL;
+	int mnoznik = 0;
+
+	plik = fopen(sciezka, "r");
+	if (plik != NULL)
+	{
+		fscanf(plik,"%s", bufor);
+		poziom = wybor_poziomu(bufor);
+		printf("poziom gry %s - %d\n", bufor, poziom);
+		fscanf(plik, "%d %d %d", &wymiar_x, &wymiar_y, &ile_min);
+		printf("rozmiar planszy x = %d, y = %d, liczba min = %d\n", wymiar_x ,wymiar_y, ile_min);
+		switch (poziom)
+        	{
+           		case EASY_LEVEL:
+                                mnoznik = 1;
+                                break;
+			case MEDIUM_LEVEL:
+                                mnoznik = 2;
+                                break;
+                        case HARD_LEVEL:
+                                mnoznik = 3;
+                                break;
+                        case CUSTOM_LEVEL:
+                                mnoznik = 1;
+                                break;
+                        default:
+				break;
+		}
+		inicjalizuj_plansze(p, wymiar_x,wymiar_y, ile_min);
+		fscanf(plik,"%d %d", &x, &y);
+		printf("Miejsce startu: x = %d,y = %d\n", x ,y);
+		start_plansza(p,x,y);
+
+		while(krok == STEP_OK)
+		{
+			if (fscanf(plik, " %c %d %d", &znak, &x, &y)== EOF)
+			{
+				printf("Koniec danych z pliku!\n");
+				break;
+			}
+			printf("Komenda %c, x = %d, y = %d\n", znak, x ,y);
+			krok = ruch(p,znak,x,y);
+			switch (krok)
+			{
+				case STEP_OK:
+					poprawne_kroki++;
+					wynik+=mnoznik;
+				break;
+				case STEP_INVALID_CMD:
+					printf("Niepoprawna opcja\n");
+					return krok;
+				break;
+				case STEP_BOMB_HIT:
+					printf("przegrana!\n");
+					return krok;
+				break;
+				default:
+				break;
+			}
+		}
+
+		printf("Liczba poprawnych krokow: %d\n", poprawne_kroki);
+        	printf("Liczba punktow: %d\n", wynik);
+		printf("Wygrana!\n");
+		return krok;
+	}
+	return STEP_INVALID_CMD;
+}
+
