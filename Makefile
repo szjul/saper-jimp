@@ -1,2 +1,2 @@
-saper: main_test.c plansza.c obsluga.c
-	cc -Wall -Wextra -ggdb -o saper main_test.c plansza.c obsluga.c
+saper: saper.c plansza.c obsluga.c
+	cc -Wall -Wextra -ggdb -o saper saper.c plansza.c obsluga.c
