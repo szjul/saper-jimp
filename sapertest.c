@@ -2,24 +2,17 @@
 #include <stdio.h>
 #include "saper.h"
 #include "obsluga.h"
-void testuj_poziom()
-{
-assert(wybor_poziomu(NULL)==UNKNOWN_LEVEL);
-assert(wybor_poziomu("latwy")==EASY_LEVEL);
-assert(wybor_poziomu("sredni")==MEDIUM_LEVEL);
-assert(wybor_poziomu("trudny")==HARD_LEVEL);
-assert(wybor_poziomu("custom")==CUSTOM_LEVEL);
-assert(wybor_poziomu("inny")==UNKNOWN_LEVEL);
 
-}
-
+void testuj_wybor_poziomu(void);
+void testuj_gra_z_pliku(void);
 
 int main(int argc, char * argv[])
 {
+	printf("Testuje: wybor_poziomu.\n");
+	testuj_wybor_poziomu();
+	printf("Testuje: gra_z_pliku.\n");
+	testuj_gra_z_pliku();
 
-testuj_poziom();
-
-
-printf("Testy wykonane poprawnie\n");
+	printf("Testy wykonane poprawnie\n");
 }
 
