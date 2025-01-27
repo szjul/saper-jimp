@@ -13,5 +13,6 @@ void zwolnij_plansze(plansza *p);
 void start_plansza(plansza *p, int podane_start_x, int podane_start_y, int ile_min);
 void wyswietl_plansze(plansza *p);
 void zamiana_kolo_pktu(plansza *p, int w, int k, char znak);
+int ruch(plansza *p, char co, int x, int y);
 
 #endif
