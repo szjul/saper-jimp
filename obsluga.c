@@ -4,7 +4,7 @@
 #include "obsluga.h"
 #include "saper.h"
 
-#define MAX_HIGHSCORE_ENTRIES 10
+#define MAX_HIGHSCORE_ENTRIES 100
 
 Level wybor_poziomu(char* bufor)
 {
