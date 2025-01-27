@@ -8,6 +8,7 @@
 
 Level wybor_poziomu(char* bufor)
 {
+	if (bufor != NULL){
 	if(strcmp(bufor,"latwy") == 0 )
 	{
 		return EASY_LEVEL;
@@ -20,6 +21,7 @@ Level wybor_poziomu(char* bufor)
         } else if(strcmp(bufor, "custom") == 0)
         {
 		return CUSTOM_LEVEL;
+	}
 	}
 	return UNKNOWN_LEVEL;
 }
