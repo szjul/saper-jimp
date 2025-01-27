@@ -138,6 +138,38 @@ void start_plansza(plansza *p, int podane_start_x, int podane_start_y, int ile_m
 
 }
 
+int ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli ruch to nie 'r' ani 'f', 2 jesli trafi na mine
+{
+    //printf("ruch\n");
+    x--;
+    y--;
+    if(co != 'r' && co != 'f')
+    {
+        printf("zly ruch\n");
+        return 1;
+    }
+    else if(co == 'r')
+    {
+        //printf("zaczynam (r)\n");
+        p->stan[y][x] = 1;
+        if(p->board[y][x] == '_')
+            stan_kolo_pktu(p, y, x);
+        else if(p->board[y][x] =='o')
+        {
+            printf("trafiles na mine, przegrywasz:(\n");
+            return 2;
+        }
+    }
+    else
+    {
+        //printf("zaczynam (f)\n");
+        if(p->stan[y][x] == 0 || p->stan[y][x] == 1) //jesli zakryte (albo odkryte daje te opcje)
+            p->stan[y][x] = 2;
+        else if(p->stan[y][x] == 2)
+            p->board[y][x] = 1;
+    }
+    return 0;
+}
 
 void wyswietl_plansze(plansza *p)
 {
@@ -168,10 +200,12 @@ void wyswietl_plansze(plansza *p)
         printf("%3d|", i+1);
         for(int j = 0; j < (p->k); j++)
         {
-            if(p->stan[i][j] == 1)
+            if(p->stan[i][j] == 1) //odkryte
                 printf(" %c  ", p->board[i][j]);
+            else if(p->stan[i][j] == 2) //flaga
+                printf(" X  ");
             else
-                printf(" \u2588  ");
+                printf(" \u2588  "); //zakryte
         }
         printf("\n\n");
     }
