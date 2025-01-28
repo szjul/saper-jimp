@@ -136,7 +136,7 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
 {
     x--;
     y--;
-    if( x<0 || x>p->k || y<0 || y>p->w)
+    if( x<0 || x>=p->k || y<0 || y>=p->w)
     {
 	printf("Podane wspolrzedne sa poza granicami planszy\n");
 	return STEP_INVALID_CMD;
