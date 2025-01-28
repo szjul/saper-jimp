@@ -136,6 +136,12 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
 {
     x--;
     y--;
+    if( x<0 || x>p->k || y<0 || y>p->w)
+    {
+    printf("Podane wspolrzedne sa poza granicami planszy\n");
+    return STEP_INVALID_CMD;
+    }
+	
     if(co != 'r' && co != 'f')
     {
         printf("Zly ruch\n");
@@ -144,6 +150,11 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
 
     if(co == 'r')
     {
+	    if(p->stan[y][x]== 1)
+	    {
+	    printf("Podane pole jest juz odkryte\n");
+	    return STEP_INVALID_CMD;
+	    }
         p->stan[y][x] = 1;
         if(p->board[y][x] == '_')
             stan_kolo_pktu(p, y, x);
