@@ -137,20 +137,20 @@ int main(int argc, char *argv[])
 	{
         do{
             printf("Podaj co chcesz zrobic (f lub r) i wspolrzedne x y: ");
-            if (strchr(linia, '\n') == NULL) {
-                    while (getchar() != '\n');  // Opró¿nij resztê bufora
-                }
             if(fgets(linia, MAX, stdin) == NULL)
             {
                 printf("Blad odczytu danych wejsciowych, sprobuj ponownie\n");
                 continue;
             }
-            else if(sscanf(linia, "%c %d %d", &znak, &x, &y) != 3)
+		if (strchr(linia, '\n') == NULL) {
+            		while (getchar() != '\n');  // OprÃ³Å¼nij resztÄ™ bufora
+        	}
+            if(sscanf(linia, "%c %d %d", &znak, &x, &y) != 3)
             {
                 printf("Blad danych\n");
                 continue;
             }
-            else if (x < 0 || x >= p.k || y < 0 || y >= p.w)
+            if (x < 0 || x >= p.k || y < 0 || y >= p.w)
             {
                 printf("Wspolrzedne poza granicami planszy. Sprobuj ponownie.\n");
                 continue;
