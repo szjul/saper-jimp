@@ -5,7 +5,7 @@
 #include "plansza.h"
 #include "obsluga.h"
 #include "saper.h"
-
+#define MAX 6 //dlugosc linii wpisywania ruchu
 
 int main(int argc, char *argv[])
 {
@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 	Gracz gracze[10];
 	int mnoznik;
 	StepResult wynik_ruchu;
+	char linia[MAX];
 
 	char bufor[10];
 	Level poziom = UNKNOWN_LEVEL;
@@ -125,7 +126,7 @@ int main(int argc, char *argv[])
             break;
         }
 	}while(1);
-
+            while (getchar() != '\n');
 
 	printf("Generuje plansze na podanym poziomie trudnosci\n");
     start_plansza(&p,x,y);
@@ -134,9 +135,31 @@ int main(int argc, char *argv[])
 
 	do
 	{
-		printf("Podaj co chcesz zrobic f lub r i wspolrzedne x y: ");
-		if(scanf(" %c%d%d",&znak, &x,&y)!=3)
-		printf("Niepoprawne dane wejsciowe\n");
+        do{
+            printf("Podaj co chcesz zrobic (f lub r) i wspolrzedne x y: ");
+            if (strchr(linia, '\n') == NULL) {
+                    while (getchar() != '\n');  // Opró¿nij resztê bufora
+                }
+            if(fgets(linia, MAX, stdin) == NULL)
+            {
+                printf("Blad odczytu danych wejsciowych, sprobuj ponownie\n");
+                continue;
+            }
+            else if(sscanf(linia, "%c %d %d", &znak, &x, &y) != 3)
+            {
+                printf("Blad danych\n");
+                continue;
+            }
+            else if (x < 0 || x >= p.k || y < 0 || y >= p.w)
+            {
+                printf("Wspolrzedne poza granicami planszy. Sprobuj ponownie.\n");
+                continue;
+            }
+            else{
+                break;
+            }
+        }while(1);
+
 		wynik_ruchu = ruch(&p, znak, x, y);
 		switch(wynik_ruchu)
 		{
