@@ -102,7 +102,9 @@ void start_plansza(plansza *p, int podane_start_x, int podane_start_y)
     srand(time(NULL));
     int start_w = podane_start_y - 1;
     int start_k = podane_start_x - 1;
-
+	
+    if(podane_start_x<0 ||podane_start_x > p->k ||podane_start_y <0|| podane_start_y > p->w)
+	    return;
 //wypelnienie planszy znakami '_' tj pustymi
     for(int i = 0; i < (p->w); i++)
     {
