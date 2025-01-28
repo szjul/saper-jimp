@@ -18,10 +18,11 @@ int main(int argc, char *argv[])
 	int wynik= 0;
 	Gracz gracze[10];
 	int mnoznik;
-	int wynik_ruchu;
+	StepResult wynik_ruchu;
 
 	char bufor[10];
 	Level poziom = UNKNOWN_LEVEL;
+	Result result;
 
     	int liczba_wierszy, liczba_kolumn, liczba_min;
 
@@ -92,9 +93,13 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
-	printf("Podaj x i y pola, na ktorym chcesz zaczac: ");
-        scanf("%d %d",&x, &y);
-	start_plansza(&p,x,y);
+	do
+	{
+		printf("Podaj x i y pola, na ktorym chcesz zaczac: ");
+        	scanf("%d %d",&x, &y);
+		result = start_plansza(&p,x,y);
+	} while (result != RESULT_OK);
+
 	printf("Generuje plansze na podanym poziomie trudnosci\n");
 	wyswietl_plansze(&p);
 	printf("Plansza poczatkowa \n");
@@ -108,7 +113,6 @@ int main(int argc, char *argv[])
 		switch(wynik_ruchu)
 		{
 		case STEP_OK:
-		
 			wynik += mnoznik;
 			wyswietl_plansze(&p);
 			printf("\nTwoj wynik to %d\n", wynik);
@@ -117,11 +121,15 @@ int main(int argc, char *argv[])
 			printf("Sprobuj ponownie\n");
 			break;
 		case STEP_BOMB_HIT:
+			wyswietl_plansze(&p);
 			printf("Koniec gry\n");
 			break;
-		}		
-	} while (wynik_ruchu != 2);
-	wyswietl_plansze(&p);
+		case STEP_ALREADY_USED:
+			break;
+		default:
+			break;
+		}
+	} while (wynik_ruchu != STEP_BOMB_HIT);
 	zwolnij_plansze(&p);
 	printf("Twoj koncowy wynik to %d\n", wynik);
 	printf("Podaj swoje imie: ");

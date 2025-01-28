@@ -276,7 +276,7 @@ StepResult gra_z_pliku(plansza *p, const char *sciezka)
 				return STEP_INVALID_CMD;
 			}
 
-			while (krok == STEP_OK)
+			while (krok == STEP_OK || krok == STEP_ALREADY_USED)
 			{
 				if (fscanf(plik, " %c %d %d", &znak, &x, &y)== EOF)
 				{

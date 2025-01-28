@@ -7,5 +7,11 @@ typedef struct
         int wynik;
 } Gracz;
 
+typedef enum Result
+{
+	RESULT_OK,
+	RESULT_ERROR
+} Result;
+
 #endif
 
