@@ -8,3 +8,11 @@ bolek 6
 boski 9
 gooo 12
 rofsoadf 3
+pl 17
+ziutson 10
+sigma 53
+R3DSHARD 0
+R3DSHARD 15
+s 4
+gerb 9
+gerb 30

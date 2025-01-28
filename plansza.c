@@ -10,7 +10,7 @@
 
 //x - ilosc kolumn
 //y = ilosc wierszy
-//stan - zakryte(0), odkryte(1)
+//stan - zakryte(0), odkryte(1), flaga(2), startowe(3)
 
 void inicjalizuj_plansze(plansza *p, int wymiar_x, int wymiar_y, int ile_min)
 {
@@ -78,24 +78,20 @@ void zamiana_kolo_pktu(plansza *p, int w, int k, char znak) //(w, k) = (y, x)
         int ck = k + dk[i]; //cale kolumny
         if(cw >= 0 && cw < (p->w) && ck >= 0 && ck < (p->k) )
         {
-            if(p->board[cw][ck] == 'w')
+            if(p->stan[w][k] == 3)
             {
-                if(isdigit(p->board[cw][ck]));
+                p->stan[cw][ck] = 3;
+            }
+
+            if(p->board[cw][ck] != 'o')
+            {
+                if(isdigit(p->board[cw][ck])){
+                    p->board[cw][ck] += 1;
+                }
                 else
                 {
                     p->board[cw][ck] = znak;
                 }
-            }
-
-            else if(znak == '_' && isdigit(p->board[cw][ck]));
-
-            else if(p->board[cw][ck] != 'o')
-            {
-               if(isdigit(p->board[cw][ck])){
-                p->board[cw][ck] += 1;
-                }
-                else
-                p->board[cw][ck] = znak;
             }
         }
     }
@@ -121,8 +117,8 @@ Result start_plansza(plansza *p, int podane_start_x, int podane_start_y)
         }
     }
 
-    p->board[start_w][start_k] = 'W';
-    zamiana_kolo_pktu(p, start_w, start_k, 'w');
+    p->stan[start_w][start_k] = 3;
+    zamiana_kolo_pktu(p, start_w, start_k, '_');
 
 //rozmieszczenie min i cyfr wokol nich na planszy
     for (int n = 0; n < p->ile_min; n++)
@@ -132,22 +128,18 @@ Result start_plansza(plansza *p, int podane_start_x, int podane_start_y)
         {
             mina_k = rand()%(p->k);
             mina_w = rand()%(p->w);
-        }while (p->board[mina_w][mina_k] == 'o' || p->board[mina_w][mina_k] == 'w'
-               || p->board[mina_w][mina_k] == 'W'|| isdigit(p->board[mina_w][mina_k]));
+        }while((p->board[mina_w][mina_k] == 'o' || p->stan[mina_w][mina_k] == 3));
 
         p->board[mina_w][mina_k] = 'o';
         zamiana_kolo_pktu(p, mina_w, mina_k, '1');
     }
-    p->board[start_w][start_k] = '_';
-    zamiana_kolo_pktu(p, start_w, start_k, '_');
-
     stan_kolo_pktu(p, start_w, start_k);
     return RESULT_OK;
+
 }
 
 StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli ruch to nie 'r' ani 'f', 2 jesli trafi na mine
 {
-    //printf("ruch\n");
     x--;
     y--;
     if( x<0 || x>p->k || y<0 || y>p->w)
@@ -155,20 +147,20 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
 	printf("Podane wspolrzedne sa poza granicami planszy\n");
 	return STEP_INVALID_CMD;
     }
+	
     if(co != 'r' && co != 'f')
     {
         printf("Zly ruch\n");
         return STEP_INVALID_CMD;
     }
-    else if(co == 'r')
+
+    if(co == 'r')
     {
 	    if(p->stan[y][x]== 1)
 	    {
 	    	printf("Podane pole jest juz odkryte\n");
 	    	return STEP_ALREADY_USED;
 	    }
-
-        //printf("zaczynam (r)\n");
         p->stan[y][x] = 1;
         if(p->board[y][x] == '_')
             stan_kolo_pktu(p, y, x);
@@ -178,13 +170,12 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
             return STEP_BOMB_HIT;
         }
     }
-    else
+    if(co == 'f')
     {
-        //printf("zaczynam (f)\n");
         if(p->stan[y][x] == 0 || p->stan[y][x] == 1) //jesli zakryte (albo odkryte daje te opcje)
             p->stan[y][x] = 2;
         else if(p->stan[y][x] == 2)
-            p->board[y][x] = 1;
+            p->stan[y][x] = 0;
     }
     return STEP_OK;
 }
@@ -192,7 +183,7 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
 void wyswietl_plansze(plansza *p)
 {
     //wiersz z numerami linii
-    for(int i = 0; i <= (p->w); i++)
+    for(int i = 0; i <= (p->k); i++)
     {
         if(i == 0){
             printf("   ");
@@ -202,7 +193,7 @@ void wyswietl_plansze(plansza *p)
     }
     printf("\n");
     //wiersz z obramowaniem planszy
-    for(int i = 0; i <= (p->w); i++)
+    for(int i = 0; i <= (p->k); i++)
     {
         if(i == 0){
             printf("   ");
