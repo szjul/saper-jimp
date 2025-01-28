@@ -97,16 +97,12 @@ void zamiana_kolo_pktu(plansza *p, int w, int k, char znak) //(w, k) = (y, x)
     }
 }
 
-Result start_plansza(plansza *p, int podane_start_x, int podane_start_y)
+void start_plansza(plansza *p, int podane_start_x, int podane_start_y)
 {
     srand(time(NULL));
     int start_w = podane_start_y - 1;
     int start_k = podane_start_x - 1;
-    if (podane_start_x<0 || podane_start_x > p->k || podane_start_y <0 || podane_start_y > p->w)
-    {
-        printf("Punkt rozpoczecia poza plansza!\n");
-        return RESULT_ERROR;
-    }
+
 //wypelnienie planszy znakami '_' tj pustymi
     for (int i = 0; i < (p->w); i++)
     {
@@ -134,8 +130,6 @@ Result start_plansza(plansza *p, int podane_start_x, int podane_start_y)
         zamiana_kolo_pktu(p, mina_w, mina_k, '1');
     }
     stan_kolo_pktu(p, start_w, start_k);
-    return RESULT_OK;
-
 }
 
 StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli ruch to nie 'r' ani 'f', 2 jesli trafi na mine
@@ -147,7 +141,7 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
 	printf("Podane wspolrzedne sa poza granicami planszy\n");
 	return STEP_INVALID_CMD;
     }
-	
+
     if(co != 'r' && co != 'f')
     {
         printf("Zly ruch\n");
@@ -161,10 +155,12 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
 	    	printf("Podane pole jest juz odkryte\n");
 	    	return STEP_ALREADY_USED;
 	    }
-        p->stan[y][x] = 1;
+
         if(p->board[y][x] == '_')
             stan_kolo_pktu(p, y, x);
-        else if(p->board[y][x] =='o')
+        p->stan[y][x] = 1;
+
+        if(p->board[y][x] =='o')
         {
             printf("Trafiles na mine, przegrywasz:(\n");
             return STEP_BOMB_HIT;
@@ -172,8 +168,13 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
     }
     if(co == 'f')
     {
-        if(p->stan[y][x] == 0 || p->stan[y][x] == 1) //jesli zakryte (albo odkryte daje te opcje)
+        if(p->stan[y][x] == 0)
             p->stan[y][x] = 2;
+        else if(p->stan[y][x] == 0)
+        {
+            printf("Podane pole jest juz odkryte\n");
+            return STEP_ALREADY_USED;
+        }
         else if(p->stan[y][x] == 2)
             p->stan[y][x] = 0;
     }
@@ -261,12 +262,7 @@ StepResult gra_z_pliku(plansza *p, const char *sciezka)
 			inicjalizuj_plansze(p, wymiar_x,wymiar_y, ile_min);
 			fscanf(plik,"%d %d", &x, &y);
 			printf("Miejsce startu: x = %d,y = %d\n", x ,y);
-			if (start_plansza(p,x,y) != RESULT_OK)
-			{
-				fclose(plik);
-				return STEP_INVALID_CMD;
-			}
-
+            start_plansza(p,x,y);
 			while (krok == STEP_OK || krok == STEP_ALREADY_USED)
 			{
 				if (fscanf(plik, " %c %d %d", &znak, &x, &y)== EOF)
