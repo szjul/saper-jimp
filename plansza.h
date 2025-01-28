@@ -21,7 +21,7 @@ typedef enum StepResult
 
 void inicjalizuj_plansze(plansza *p, int wymiar_x, int wymiar_y, int ile_min);
 void zwolnij_plansze(plansza *p);
-Result start_plansza(plansza *p, int podane_start_x, int podane_start_y);
+void start_plansza(plansza *p, int podane_start_x, int podane_start_y);
 void wyswietl_plansze(plansza *p);
 void zamiana_kolo_pktu(plansza *p, int w, int k, char znak);
 StepResult ruch(plansza *p, char co, int x, int y);

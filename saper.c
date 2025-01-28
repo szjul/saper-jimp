@@ -22,7 +22,6 @@ int main(int argc, char *argv[])
 
 	char bufor[10];
 	Level poziom = UNKNOWN_LEVEL;
-	Result result;
 
     	int liczba_wierszy, liczba_kolumn, liczba_min;
 
@@ -93,14 +92,43 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
-	do
-	{
-		printf("Podaj x i y pola, na ktorym chcesz zaczac: ");
-        	scanf("%d %d",&x, &y);
-		result = start_plansza(&p,x,y);
-	} while (result != RESULT_OK);
+	do{
+        printf("Podaj x pola, na ktorym chcesz zaczac, gdzie x nalezy do zakresu (1, %d): ", p.k);
+        if(scanf("%d",&x)!=1)
+        {
+            printf("Niepoprawny parametr pola startowego\n");
+            while (getchar() != '\n');
+        }
+        else if(x < 0 || x >= p.k)
+        {
+            printf("Podany parametr nie nalezy do planszy, sprobuj ponownie\n");
+        }
+        else
+        {
+            break;
+        }
+	}while(1);
+
+	do{
+        printf("Podaj y pola, na ktorym chcesz zaczac, gdzie y nalezy do zakresu (1, %d): ", p.w);
+        if(scanf("%d",&y)!=1)
+        {
+            printf("Niepoprawny parametr pola startowego\n");
+            while (getchar() != '\n');
+        }
+        else if(y < 0 || y >= p.w)
+        {
+            printf("Podany parametr nie nalezy do planszy, sprobuj ponownie\n");
+        }
+        else
+        {
+            break;
+        }
+	}while(1);
+
 
 	printf("Generuje plansze na podanym poziomie trudnosci\n");
+    start_plansza(&p,x,y);
 	wyswietl_plansze(&p);
 	printf("Plansza poczatkowa \n");
 

@@ -16,3 +16,6 @@ R3DSHARD 15
 s 4
 gerb 9
 gerb 30
+d 2
+ss 0
+mata 18
