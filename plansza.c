@@ -170,7 +170,7 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
     {
         if(p->stan[y][x] == 0)
             p->stan[y][x] = 2;
-        else if(p->stan[y][x] == 0)
+        else if(p->stan[y][x] == 1)
         {
             printf("Podane pole jest juz odkryte\n");
             return STEP_ALREADY_USED;
