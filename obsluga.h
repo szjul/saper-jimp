@@ -11,9 +11,9 @@ typedef enum
         CUSTOM_LEVEL
 } Level;
 
-void zapisz_wyniki_do_pliku(const char* nazwa_pliku, Gracz* gracze, int liczba_graczy);
+Result zapisz_wyniki_do_pliku(const char* nazwa_pliku, Gracz* gracze, int liczba_graczy);
 int porownaj_graczy(const void* a, const void* b);
-void wyswietl_najlepszych_graczy(const char* nazwa_pliku);
+Result wyswietl_najlepszych_graczy(const char* nazwa_pliku);
 Level wybor_poziomu(char* poziom);
 
 

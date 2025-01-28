@@ -26,54 +26,68 @@ Level wybor_poziomu(char* bufor)
 	return UNKNOWN_LEVEL;
 }
 
-void zapisz_wyniki_do_pliku(const char* nazwa_pliku, Gracz* gracze, int liczba_graczy) 
+Result zapisz_wyniki_do_pliku(const char* nazwa_pliku, Gracz* gracze, int liczba_graczy) 
 {
-	FILE *plik = fopen(nazwa_pliku, "a");
-	if (plik == NULL)
+	if (nazwa_pliku != NULL && gracze != NULL)
 	{
+
+		FILE *plik = fopen(nazwa_pliku, "a");
+		if (plik != NULL)
+		{
+			for (int i = 0; i < liczba_graczy; i++)
+			{
+				fprintf(plik, "%s %d\n", gracze[i].imie, gracze[i].wynik);
+			}
+			fclose(plik);
+			return RESULT_OK;
+		}
 		printf("Nie mozna otworzyc pliku do zapisu.\n");
-		return;
+		return RESULT_ERROR;
 	}
-	for (int i = 0; i < liczba_graczy; i++)
-	{
-		fprintf(plik, "%s %d\n", gracze[i].imie, gracze[i].wynik);
-	}
-	fclose(plik);
-};
+	printf("Niewlasciwy parametr.\n");
+	return RESULT_ERROR;
+}
 
 int porownaj_graczy(const void* a, const void* b)
 {
 	return ((Gracz*)b)->wynik - ((Gracz*)a)->wynik;
 }
 
-void wyswietl_najlepszych_graczy(const char* nazwa_pliku)
+Result wyswietl_najlepszych_graczy(const char* nazwa_pliku)
 {
-	FILE *plik = fopen(nazwa_pliku, "r");
-	if (plik == NULL)
-	{
-		printf("Nie mozna otworzyc pliku do odczytu.\n");
-		return;
-	}
-
 	Gracz gracze[MAX_HIGHSCORE_ENTRIES];
 	int liczba_graczy = 0;
 
-	while (fscanf(plik, "%s %d", gracze[liczba_graczy].imie, &gracze[liczba_graczy].wynik) != EOF)
+	if (nazwa_pliku != NULL)
 	{
-		liczba_graczy++;
-		if (liczba_graczy>=MAX_HIGHSCORE_ENTRIES)
+		FILE *plik = fopen(nazwa_pliku, "r");
+		if (plik == NULL)
 		{
-			printf("Lista graczy pelna!\n:");
-			break;
+			printf("Nie mozna otworzyc pliku do odczytu.\n");
+			return RESULT_ERROR;
 		}
-	}
 
-	fclose(plik);
 
-	qsort(gracze, liczba_graczy, sizeof(Gracz), porownaj_graczy);
-	printf("5 najlepszych graczy:\n");
-	for (int i = 0; i < 5 && i < liczba_graczy; i++)
-	{
-		printf("%d. %s - %d\n", i + 1, gracze[i].imie, gracze[i].wynik);
+		while (fscanf(plik, "%s %d", gracze[liczba_graczy].imie, &gracze[liczba_graczy].wynik) != EOF)
+		{
+			liczba_graczy++;
+			if (liczba_graczy>=MAX_HIGHSCORE_ENTRIES)
+			{
+				printf("Lista graczy pelna!\n:");
+				break;
+			}
+		}
+
+		fclose(plik);
+
+		qsort(gracze, liczba_graczy, sizeof(Gracz), porownaj_graczy);
+		printf("5 najlepszych graczy:\n");
+		for (int i = 0; i < 5 && i < liczba_graczy; i++)
+		{
+			printf("%d. %s - %d\n", i + 1, gracze[i].imie, gracze[i].wynik);
+		}
+		return RESULT_OK;
 	}
+	printf("Niewlasciwy parametr.\n");
+	return RESULT_ERROR;
 }
