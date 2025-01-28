@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 	if (sciezka_pliku)
 	{
 		printf("Wczytywanie planszy z pliku %s\n", sciezka_pliku);
-		if (fp = fopen(sciezka_pliku, "r"))
+		if (fp == fopen(sciezka_pliku, "r"))
 		{
 			gra_z_pliku(&p, sciezka_pliku);
 			return 0;
