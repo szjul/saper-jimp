@@ -102,16 +102,26 @@ int main(int argc, char *argv[])
 	do
 	{
 		printf("Podaj co chcesz zrobic f lub r i wspolrzedne x y: ");
-		scanf(" %c%d%d",&znak, &x,&y);
-		printf("\n");
+		if(scanf(" %c%d%d",&znak, &x,&y)!=3)
+		printf("Niepoprawne dane wejsciowe\n");
 		wynik_ruchu = ruch(&p, znak, x, y);
-		if(wynik_ruchu == 0)
+		switch(wynik_ruchu)
 		{
+		case STEP_OK:
+		
 			wynik += mnoznik;
 			wyswietl_plansze(&p);
-			printf("Twoj wynik to %d\n", wynik);
-		}
+			printf("\nTwoj wynik to %d\n", wynik);
+			break;
+		case STEP_INVALID_CMD:
+			printf("Sprobuj ponownie\n");
+			break;
+		case STEP_BOMB_HIT:
+			printf("Koniec gry\n");
+			break;
+		}		
 	} while (wynik_ruchu != 2);
+	wyswietl_plansze(&p);
 	zwolnij_plansze(&p);
 	printf("Twoj koncowy wynik to %d\n", wynik);
 	printf("Podaj swoje imie: ");

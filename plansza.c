@@ -106,7 +106,8 @@ void start_plansza(plansza *p, int podane_start_x, int podane_start_y)
     srand(time(NULL));
     int start_w = podane_start_y - 1;
     int start_k = podane_start_x - 1;
-
+    if(podane_start_x<0 ||podane_start_x > p->k ||podane_start_y <0|| podane_start_y > p->w)
+	    return;
 //wypelnienie planszy znakami '_' tj pustymi
     for(int i = 0; i < (p->w); i++)
     {
@@ -147,6 +148,11 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
     //printf("ruch\n");
     x--;
     y--;
+    if( x<0 || x>p->k || y<0 || y>p->w)
+    {
+    printf("Podane wspolrzedne sa poza granicami planszy\n");
+    return STEP_INVALID_CMD;
+    }
     if(co != 'r' && co != 'f')
     {
         printf("Zly ruch\n");
@@ -154,6 +160,12 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
     }
     else if(co == 'r')
     {
+	    if(p->stan[y][x]== 1)
+	    {
+	    printf("Podane pole jest juz odkryte\n");
+	    return STEP_INVALID_CMD;
+	    }
+
         //printf("zaczynam (r)\n");
         p->stan[y][x] = 1;
         if(p->board[y][x] == '_')
