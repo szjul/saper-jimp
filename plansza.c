@@ -177,6 +177,7 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
         }
         else if(p->stan[y][x] == 2)
             p->stan[y][x] = 0;
+	return STEP_FLAG;
     }
     return STEP_OK;
 }

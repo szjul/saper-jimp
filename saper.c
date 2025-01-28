@@ -154,6 +154,9 @@ int main(int argc, char *argv[])
 			break;
 		case STEP_ALREADY_USED:
 			break;
+		case STEP_FLAG:
+			wyswietl_plansze(&p);
+			break;
 		default:
 			break;
 		}
