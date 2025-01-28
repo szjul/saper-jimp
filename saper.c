@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
                 printf("Blad danych\n");
                 continue;
             }
-            if (x < 0 || x >= p.k || y < 0 || y >= p.w)
+            else if (x < 0 || x >= p.k || y < 0 || y >= p.w)
             {
                 printf("Wspolrzedne poza granicami planszy. Sprobuj ponownie.\n");
                 continue;
