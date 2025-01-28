@@ -14,5 +14,5 @@ void testuj_gra_z_pliku()
 	assert(gra_z_pliku(&p, NULL)==STEP_INVALID_CMD);
 	assert(gra_z_pliku(&p, "zlasciezka")==STEP_INVALID_CMD);
 	result = gra_z_pliku(&p, "rozgrywka");
-	assert ((result==STEP_BOMB_HIT) || result == STEP_OK);
+	assert ((result==STEP_BOMB_HIT) || (result == STEP_OK) || (result == STEP_ALREADY_USED));
 }
