@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 			{
 				case EASY_LEVEL:
 					printf("Wybrano poziom latwy\n");
-			    		inicjalizuj_plansze(&p, 9, 9, 9);
+			    		inicjalizuj_plansze(&p, 9, 9, 10);
 					mnoznik = 1;
 				break;
 				case MEDIUM_LEVEL:
