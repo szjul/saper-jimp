@@ -198,8 +198,10 @@ int main(int argc, char *argv[])
 		default:
 			break;
 		}
-	} while (wynik_ruchu != STEP_BOMB_HIT);
+	} while (wynik_ruchu != STEP_BOMB_HIT && sprawdzenie_czy_wygrana(&p) == 2);
 	zwolnij_plansze(&p);
+	if(wynik_ruchu != STEP_BOMB_HIT && sprawdzenie_czy_wygrana(&p) == 1)
+        printf("Wygrana!\n");
 	printf("Twoj koncowy wynik to %d\n", wynik);
 	printf("Podaj swoje imie: ");
 	scanf("%s",gracze[0].imie);

@@ -26,6 +26,7 @@ void inicjalizuj_plansze(plansza *p, int wymiar_x, int wymiar_y, int ile_min);
 void zwolnij_plansze(plansza *p);
 void start_plansza(plansza *p, int podane_start_x, int podane_start_y);
 void wyswietl_plansze(plansza *p);
+int sprawdzenie_czy_wygrana(plansza *p);
 void zamiana_kolo_pktu(plansza *p, int w, int k, char znak);
 StepResult ruch(plansza *p, char co, int x, int y);
 StepResult gra_z_pliku(plansza *p, const char *sciezka);

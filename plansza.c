@@ -132,7 +132,20 @@ void start_plansza(plansza *p, int podane_start_x, int podane_start_y)
     stan_kolo_pktu(p, start_w, start_k);
 }
 
-StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli ruch to nie 'r' ani 'f', 2 jesli trafi na mine
+int sprawdzenie_czy_wygrana(plansza *p) //1 jesli wygrana
+{
+    for (int i = 0; i < (p->w); i++)
+    {
+        for(int j = 0; j < (p->k); j++)
+        {
+            if(p->board[i][j] != 'o' && p->stan[i][j] != 1)
+                return 2;
+        }
+    }
+    return 1;
+}
+
+StepResult ruch(plansza *p, char co, int x, int y)
 {
     if( x<0 || x>=(p->k+1) || y<0 || y>=(p->w +1))
     {
@@ -141,7 +154,6 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
     }
     x--;
     y--;
-
 
     if(co != 'r' && co != 'f')
     {
