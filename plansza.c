@@ -134,13 +134,14 @@ void start_plansza(plansza *p, int podane_start_x, int podane_start_y)
 
 StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli ruch to nie 'r' ani 'f', 2 jesli trafi na mine
 {
-    x--;
-    y--;
-    if( x<0 || x>=p->k || y<0 || y>=p->w)
+    if( x<0 || x>=(p->k+1) || y<0 || y>=(p->w +1))
     {
 	printf("Podane wspolrzedne sa poza granicami planszy\n");
 	return STEP_INVALID_CMD;
     }
+    x--;
+    y--;
+
 
     if(co != 'r' && co != 'f')
     {
@@ -153,6 +154,11 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
 	    if(p->stan[y][x]== 1)
 	    {
 	    	printf("Podane pole jest juz odkryte\n");
+	    	return STEP_ALREADY_USED;
+	    }
+	    if(p->stan[y][x]== 2)
+	    {
+	    	printf("Na tym polu jest flaga, usun flage przed odkryciem pola\n");
 	    	return STEP_ALREADY_USED;
 	    }
 
@@ -169,15 +175,20 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
     if(co == 'f')
     {
         if(p->stan[y][x] == 0)
+        {
             p->stan[y][x] = 2;
+            return STEP_FLAG_1;
+        }
         else if(p->stan[y][x] == 1)
         {
             printf("Podane pole jest juz odkryte\n");
             return STEP_ALREADY_USED;
         }
         else if(p->stan[y][x] == 2)
+        {
             p->stan[y][x] = 0;
-	return STEP_FLAG;
+            return STEP_FLAG_2;
+        }
     }
     return STEP_OK;
 }
@@ -251,7 +262,7 @@ StepResult gra_z_pliku(plansza *p, const char *sciezka)
 				case MEDIUM_LEVEL:
         	                        mnoznik = 2;
         	                        break;
-        		                case HARD_LEVEL:
+        			case HARD_LEVEL:
                				mnoznik = 3;
 					break;
 				case CUSTOM_LEVEL:
@@ -290,8 +301,6 @@ StepResult gra_z_pliku(plansza *p, const char *sciezka)
 						return krok;
 					break;
 					case STEP_ALREADY_USED:
-					break;
-					case STEP_FLAG:
 					break;
 					case STEP_FINISHED:
 					break;

@@ -17,7 +17,8 @@ typedef enum StepResult
 	STEP_INVALID_CMD,
 	STEP_BOMB_HIT,
 	STEP_ALREADY_USED,
-	STEP_FLAG,
+	STEP_FLAG_1,
+	STEP_FLAG_2,
 	STEP_FINISHED
 } StepResult;
 

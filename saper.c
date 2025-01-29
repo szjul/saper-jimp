@@ -5,7 +5,7 @@
 #include "plansza.h"
 #include "obsluga.h"
 #include "saper.h"
-#define MAX 6 //dlugosc linii wpisywania ruchu
+#define MAX 10 //dlugosc linii wpisywania ruchu
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
 	int x, y;
 	char znak;
 	int wynik= 0;
+	int l_flag;
 	Gracz gracze[10];
 	int mnoznik;
 	StepResult wynik_ruchu;
@@ -119,10 +120,12 @@ int main(int argc, char *argv[])
         	} else break;
 	} while (1);
 
+    l_flag = p.ile_min;
 	printf("Generuje plansze na podanym poziomie trudnosci\n");
 	start_plansza(&p,x,y);
 	wyswietl_plansze(&p);
 	printf("Plansza poczatkowa \n");
+	printf("Liczba flag to %d\n", l_flag);
 
 	do
 	{
@@ -147,6 +150,7 @@ int main(int argc, char *argv[])
 				wynik += mnoznik;
 				wyswietl_plansze(&p);
 				printf("\nTwoj wynik to %d\n", wynik);
+				printf("Liczba pozostalych flag to %d\n", l_flag);
 			break;
 			case STEP_INVALID_CMD:
 				printf("Sprobuj ponownie\n");
@@ -157,8 +161,19 @@ int main(int argc, char *argv[])
 			break;
 			case STEP_ALREADY_USED:
 			break;
-			case STEP_FLAG:
-				wyswietl_plansze(&p);
+		case STEP_FLAG_1:
+		    {
+                wyswietl_plansze(&p);
+                l_flag--;
+                printf("Liczba pozostalych flag to %d\n", l_flag);
+		    }
+			break;
+        case STEP_FLAG_2:
+		    {
+                wyswietl_plansze(&p);
+                l_flag++;
+                printf("Liczba pozostalych flag to %d\n", l_flag);
+		    }
 			break;
 			case STEP_FINISHED:
 				wyswietl_plansze(&p);
