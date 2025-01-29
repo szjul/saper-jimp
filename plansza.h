@@ -17,8 +17,8 @@ typedef enum StepResult
 	STEP_INVALID_CMD,
 	STEP_BOMB_HIT,
 	STEP_ALREADY_USED,
-	STEP_FLAG
-	
+	STEP_FLAG,
+	STEP_FINISHED
 } StepResult;
 
 void inicjalizuj_plansze(plansza *p, int wymiar_x, int wymiar_y, int ile_min);

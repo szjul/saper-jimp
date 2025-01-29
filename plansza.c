@@ -123,7 +123,7 @@ void start_plansza(plansza *p, int podane_start_x, int podane_start_y)
         do
         {
             mina_k = rand()%(p->k);
-            mina_w = rand()%(p->w);
+             mina_w = rand()%(p->w);
         }while((p->board[mina_w][mina_k] == 'o' || p->stan[mina_w][mina_k] == 3));
 
         p->board[mina_w][mina_k] = 'o';
@@ -263,8 +263,8 @@ StepResult gra_z_pliku(plansza *p, const char *sciezka)
 			inicjalizuj_plansze(p, wymiar_x,wymiar_y, ile_min);
 			fscanf(plik,"%d %d", &x, &y);
 			printf("Miejsce startu: x = %d,y = %d\n", x ,y);
-            start_plansza(p,x,y);
-			while (krok == STEP_OK || krok == STEP_ALREADY_USED)
+			start_plansza(p,x,y);
+			while (krok == STEP_OK || krok == STEP_ALREADY_USED || krok == STEP_FINISHED)
 			{
 				if (fscanf(plik, " %c %d %d", &znak, &x, &y)== EOF)
 				{
@@ -285,11 +285,15 @@ StepResult gra_z_pliku(plansza *p, const char *sciezka)
 						return krok;
 					break;
 					case STEP_BOMB_HIT:
-						printf("przegrana!\n");
+						printf("Przegrana!\n");
 						fclose(plik);
 						return krok;
 					break;
 					case STEP_ALREADY_USED:
+					break;
+					case STEP_FLAG:
+					break;
+					case STEP_FINISHED:
 					break;
 					default:
 					break;

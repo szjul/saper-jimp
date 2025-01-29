@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 	Gracz gracze[10];
 	int mnoznik;
 	StepResult wynik_ruchu;
-	char linia[MAX];
+//	char linia[MAX];
 
 	char bufor[10];
 	Level poziom = UNKNOWN_LEVEL;
@@ -93,97 +93,82 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
-	do{
-        printf("Podaj x pola, na ktorym chcesz zaczac, gdzie x nalezy do zakresu (1, %d): ", p.k);
-        if(scanf("%d",&x)!=1)
-        {
-            printf("Niepoprawny parametr pola startowego\n");
-            while (getchar() != '\n');
-        }
-        else if(x < 0 || x >= p.k)
-        {
-            printf("Podany parametr nie nalezy do planszy, sprobuj ponownie\n");
-        }
-        else
-        {
-            break;
-        }
-	}while(1);
+	do
+	{
+		while (getchar() != '\n');
+        	printf("Podaj x pola, na ktorym chcesz zaczac, gdzie x nalezy do zakresu (1, %d): ", p.k);
+        	if (scanf(" %d",&x) != 1)
+        	{
+        		printf("Niepoprawny parametr pola startowego\n");
+        	} else if (x < 1 || x > p.k)
+        	{
+			printf("Podany parametr nie nalezy do planszy, sprobuj ponownie\n");
+		} else break;
+	} while (1);
 
-	do{
-        printf("Podaj y pola, na ktorym chcesz zaczac, gdzie y nalezy do zakresu (1, %d): ", p.w);
-        if(scanf("%d",&y)!=1)
-        {
-            printf("Niepoprawny parametr pola startowego\n");
-            while (getchar() != '\n');
-        }
-        else if(y < 0 || y >= p.w)
-        {
-            printf("Podany parametr nie nalezy do planszy, sprobuj ponownie\n");
-        }
-        else
-        {
-            break;
-        }
-	}while(1);
-            while (getchar() != '\n');
+	do
+	{
+		while (getchar() != '\n');
+        	printf("Podaj y pola, na ktorym chcesz zaczac, gdzie y nalezy do zakresu (1, %d): ", p.w);
+        	if(scanf(" %d",&y) != 1)
+        	{
+			printf("Niepoprawny parametr pola startowego\n");
+        	} else if (y < 1 || y > p.w)
+        	{
+            		printf("Podany parametr nie nalezy do planszy, sprobuj ponownie\n");
+        	} else break;
+	} while (1);
 
 	printf("Generuje plansze na podanym poziomie trudnosci\n");
-    start_plansza(&p,x,y);
+	start_plansza(&p,x,y);
 	wyswietl_plansze(&p);
 	printf("Plansza poczatkowa \n");
 
 	do
 	{
-        do{
-            printf("Podaj co chcesz zrobic (f lub r) i wspolrzedne x y: ");
-            if(fgets(linia, MAX, stdin) == NULL)
-            {
-                printf("Blad odczytu danych wejsciowych, sprobuj ponownie\n");
-                continue;
-            }
-		if (strchr(linia, '\n') == NULL) {
-            		while (getchar() != '\n');  // Opróżnij resztę bufora
-        	}
-            if(sscanf(linia, "%c %d %d", &znak, &x, &y) != 3)
-            {
-                printf("Blad danych\n");
-                continue;
-            }
-            else if (x < 0 || x >= p.k || y < 0 || y >= p.w)
-            {
-                printf("Wspolrzedne poza granicami planszy. Sprobuj ponownie.\n");
-                continue;
-            }
-            else{
-                break;
-            }
-        }while(1);
+        	do
+		{
+			while (getchar() != '\n');
+            		printf("Podaj co chcesz zrobic (f lub r) i wspolrzedne x y: ");
+
+            		if(scanf(" %c %d %d", &znak, &x, &y) != 3)
+			{
+                		printf("Blad danych\n");
+            		} else if ((x < 1 || x > p.k) || (y < 1 || y > p.w))
+            		{
+				printf("Wspolrzedne poza granicami planszy. Sprobuj ponownie.\n");
+			} else break;
+        	} while(1);
 
 		wynik_ruchu = ruch(&p, znak, x, y);
 		switch(wynik_ruchu)
 		{
-		case STEP_OK:
-			wynik += mnoznik;
-			wyswietl_plansze(&p);
-			printf("\nTwoj wynik to %d\n", wynik);
+			case STEP_OK:
+				wynik += mnoznik;
+				wyswietl_plansze(&p);
+				printf("\nTwoj wynik to %d\n", wynik);
 			break;
-		case STEP_INVALID_CMD:
-			printf("Sprobuj ponownie\n");
+			case STEP_INVALID_CMD:
+				printf("Sprobuj ponownie\n");
 			break;
-		case STEP_BOMB_HIT:
-			wyswietl_plansze(&p);
-			printf("Koniec gry\n");
+			case STEP_BOMB_HIT:
+				wyswietl_plansze(&p);
+				printf("Koniec gry\n");
 			break;
-		case STEP_ALREADY_USED:
+			case STEP_ALREADY_USED:
 			break;
-		case STEP_FLAG:
-			wyswietl_plansze(&p);
+			case STEP_FLAG:
+				wyswietl_plansze(&p);
 			break;
-		default:
+			case STEP_FINISHED:
+				wyswietl_plansze(&p);
+				printf("Wygrales\n");
+			break;
+			default:
 			break;
 		}
-	} while (wynik_ruchu != STEP_BOMB_HIT);
+	} while (wynik_ruchu != STEP_BOMB_HIT && wynik_ruchu != STEP_FINISHED);
+
 	zwolnij_plansze(&p);
 	printf("Twoj koncowy wynik to %d\n", wynik);
 	printf("Podaj swoje imie: ");
