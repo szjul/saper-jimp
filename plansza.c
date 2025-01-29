@@ -156,6 +156,11 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
 	    	printf("Podane pole jest juz odkryte\n");
 	    	return STEP_ALREADY_USED;
 	    }
+	    if(p->stan[y][x]== 2)
+	    {
+	    	printf("Na tym polu jest flaga, usun flage przed odkryciem pola\n");
+	    	return STEP_ALREADY_USED;
+	    }
 
         if(p->board[y][x] == '_')
             stan_kolo_pktu(p, y, x);
@@ -170,15 +175,20 @@ StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli 
     if(co == 'f')
     {
         if(p->stan[y][x] == 0)
+        {
             p->stan[y][x] = 2;
+            return STEP_FLAG_1;
+        }
         else if(p->stan[y][x] == 1)
         {
             printf("Podane pole jest juz odkryte\n");
             return STEP_ALREADY_USED;
         }
         else if(p->stan[y][x] == 2)
+        {
             p->stan[y][x] = 0;
-	return STEP_FLAG;
+            return STEP_FLAG_2;
+        }
     }
     return STEP_OK;
 }
