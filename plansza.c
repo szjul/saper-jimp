@@ -134,13 +134,14 @@ void start_plansza(plansza *p, int podane_start_x, int podane_start_y)
 
 StepResult ruch(plansza *p, char co, int x, int y) //zwraca 0 jesli ok, 1 jesli ruch to nie 'r' ani 'f', 2 jesli trafi na mine
 {
-    x--;
-    y--;
-    if( x<0 || x>=p->k || y<0 || y>=p->w)
+    if( x<0 || x>=(p->k+1) || y<0 || y>=(p->w +1))
     {
 	printf("Podane wspolrzedne sa poza granicami planszy\n");
 	return STEP_INVALID_CMD;
     }
+    x--;
+    y--;
+
 
     if(co != 'r' && co != 'f')
     {

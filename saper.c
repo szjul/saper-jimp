@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
             printf("Niepoprawny parametr pola startowego\n");
             while (getchar() != '\n');
         }
-        else if(x < 0 || x >= p.k)
+        else if(x < 1 || x >= p.k + 1)
         {
             printf("Podany parametr nie nalezy do planszy, sprobuj ponownie\n");
         }
@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
             printf("Niepoprawny parametr pola startowego\n");
             while (getchar() != '\n');
         }
-        else if(y < 0 || y >= p.w)
+        else if(y < 1 || y >= p.w + 1)
         {
             printf("Podany parametr nie nalezy do planszy, sprobuj ponownie\n");
         }
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
                 printf("Blad danych\n");
                 continue;
             }
-            else if (x < 0 || x >= p.k || y < 0 || y >= p.w)
+            else if (x < 1 || x >= p.k+1 || y < 1 || y >= p.w+1)
             {
                 printf("Wspolrzedne poza granicami planszy. Sprobuj ponownie.\n");
                 continue;
